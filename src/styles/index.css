@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primario: #6366f1;
+  --color-primario-oscuro: #4f46e5;
+  --color-secundario: #8b5cf6;
+  --color-acento: #06b6d4;
+  --color-exito: #10b981;
+  --color-advertencia: #f59e0b;
+  --color-peligro: #ef4444;
+  --color-fondo: #1e1e1e;
+  --color-fondo-nodo: #2a2a2a;
+  --color-fondo-panel: #252525;
+  --color-texto: #e0e0e0;
+  --color-texto-secundario: #999999;
+  --color-borde: #404040;
+  --color-borde-nodo: #555555;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+}
+
+.react-flow__node {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--color-primario);
+  background: var(--color-fondo);
+}
+
+.react-flow__handle:hover {
+  background: var(--color-primario);
+}
+
+.react-flow__minimap {
+  background: var(--color-fondo-panel);
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+}
+
+.react-flow__controls {
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: var(--color-fondo-panel);
+  border-bottom: 1px solid var(--color-borde);
+  fill: var(--color-texto-secundario);
+}
+
+.react-flow__controls-button:hover {
+  background: var(--color-borde);
+}
+
+.react-flow__background {
+  background: #1e1e1e;
+}
