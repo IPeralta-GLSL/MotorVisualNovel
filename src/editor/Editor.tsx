@@ -40,6 +40,12 @@ export default function Editor() {
       ]
     }
 
+    canvas.getNodeMenuOptions = (node: import('litegraph.js').LGraphNode) => {
+      return [
+        { content: 'Borrar', callback: () => { graph.remove(node) } },
+      ]
+    }
+
     canvas.onNodeSelected = (node: import('litegraph.js').LGraphNode) => {
       setLiteGraphNode(node)
     }
@@ -98,12 +104,9 @@ export default function Editor() {
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600"><span className="text-sm font-bold">VN</span></div>
           <span className="text-sm font-semibold text-neutral-200">{projectName}</span>
-          <div className="mx-2 h-6 w-px bg-neutral-600" />
-          <button onClick={() => addNodeToGraph('scene')} className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500" style={{ pointerEvents: 'auto' }}><Plus size={14} /> Escena</button>
-          <button onClick={() => addNodeToGraph('transition')} className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-purple-500" style={{ pointerEvents: 'auto' }}><Layers size={14} /> Transicion</button>
         </div>
-        <div className="flex items-center gap-1">
-          <button onClick={deleteSelected} className="rounded-lg p-2 text-neutral-400 hover:bg-red-900/50 hover:text-red-400" title="Eliminar" style={{ pointerEvents: 'auto' }}><Trash2 size={16} /></button>
+        <div className="flex items-center gap-2">
+          <button onClick={deleteSelected} className="rounded-lg p-2 text-neutral-400 hover:bg-red-900/50 hover:text-red-400" title="Eliminar seleccionado" style={{ pointerEvents: 'auto' }}><Trash2 size={16} /></button>
           <div className="mx-1 h-6 w-px bg-neutral-600" />
           <button onClick={() => setPreview(true)} className="flex items-center gap-1.5 rounded-lg bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-500" style={{ pointerEvents: 'auto' }}><PlayCircle size={14} /> Jugar</button>
         </div>
