@@ -68,7 +68,7 @@ export default function LiteGraphProperties() {
               <Plus size={12} /> Agregar Componente
             </button>
             {menuOpen && (
-              <div className="absolute bottom-full left-0 right-0 z-50 mb-1 max-h-60 overflow-y-auto rounded-xl border border-neutral-600 bg-[#2a2a2a] p-1.5 shadow-2xl">
+              <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-neutral-600 bg-[#2a2a2a] p-1.5 shadow-2xl">
                 {CL.map((t) => (
                   <button key={t} onClick={() => addComp(t)}
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm text-neutral-300 hover:bg-neutral-700">
