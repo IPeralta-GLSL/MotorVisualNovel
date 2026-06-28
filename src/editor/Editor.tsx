@@ -33,6 +33,13 @@ export default function Editor() {
     canvas.show_info = false
     canvas.zoom_modify_alpha = false
 
+    const _origProcessKey = (canvas as unknown as Record<string, unknown>).processKey as ((e: KeyboardEvent) => void) | undefined;
+    (canvas as unknown as Record<string, unknown>).processKey = function(e: KeyboardEvent) {
+      const ae = document.activeElement;
+      if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT')) return;
+      if (_origProcessKey) _origProcessKey.call(canvas, e);
+    }
+
     canvas.getCanvasMenuOptions = () => {
       return [
         { content: 'Agregar Escena', callback: () => addNodeToGraph('scene') },

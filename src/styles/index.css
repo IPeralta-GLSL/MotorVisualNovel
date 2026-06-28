@@ -113,3 +113,17 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+.sidebar-panel input,
+.sidebar-panel textarea,
+.sidebar-panel select,
+.sidebar-panel button,
+.sidebar-panel label {
+  position: relative;
+  z-index: 999;
+  pointer-events: auto;
+}
+
+.litegraph canvas {
+  pointer-events: auto;
+}

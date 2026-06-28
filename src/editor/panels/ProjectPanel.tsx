@@ -25,6 +25,7 @@ export default function ProjectPanel() {
       <div className="space-y-1">
         <label className="text-[11px] font-medium text-neutral-400">Nombre del Proyecto</label>
         <input type="text" value={projectName} onChange={(e) => setProjectName(e.target.value)}
+          onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }}
           className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
       </div>
       <div className="flex rounded-lg border border-neutral-700">
@@ -40,7 +41,7 @@ export default function ProjectPanel() {
       {tab === 'characters' && (
         <div className="space-y-2">
           <div className="flex gap-2">
-            <input type="text" value={newChar} onChange={(e) => setNewChar(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleAddChar()}
+            <input type="text" value={newChar} onChange={(e) => setNewChar(e.target.value)} onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.(); if (e.key === 'Enter') handleAddChar() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }}
               placeholder="Nombre..." className="flex-1 rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
             <button onClick={handleAddChar} className="rounded-lg bg-indigo-600 p-2 text-white hover:bg-indigo-500"><Plus size={14} /></button>
           </div>
@@ -57,7 +58,7 @@ export default function ProjectPanel() {
       {tab === 'variables' && (
         <div className="space-y-2">
           <div className="flex gap-2">
-            <input type="text" value={newVar} onChange={(e) => setNewVar(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleAddVar()}
+            <input type="text" value={newVar} onChange={(e) => setNewVar(e.target.value)} onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.(); if (e.key === 'Enter') handleAddVar() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }}
               placeholder="Nombre..." className="flex-1 rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
             <button onClick={handleAddVar} className="rounded-lg bg-teal-600 p-2 text-white hover:bg-teal-500"><Plus size={14} /></button>
           </div>

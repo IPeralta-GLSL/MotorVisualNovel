@@ -1,12 +1,15 @@
 import type { SceneComponent } from '@/shared/types'
 import { useEditorStore } from '@/shared/store/editorStore'
-import { Plus, Upload } from 'lucide-react'
+import { Plus, Upload, X, AlertCircle } from 'lucide-react'
+import { useState } from 'react'
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 function F({ label, children }: { label: string; children: React.ReactNode }) {
   return <div className="space-y-1"><label className="text-[11px] font-medium text-neutral-400">{label}</label>{children}</div>
 }
 
-const stop = { onKeyDown: (e: React.KeyboardEvent) => e.stopPropagation(), onKeyUp: (e: React.KeyboardEvent) => e.stopPropagation(), onFocus: (e: React.FocusEvent) => e.stopPropagation(), onMouseDown: (e: React.MouseEvent) => e.stopPropagation() }
+const stop = { onKeyDown: (e: React.KeyboardEvent) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }, onKeyUp: (e: React.KeyboardEvent) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }, onFocus: (e: React.FocusEvent) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }, onMouseDown: (e: React.MouseEvent) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() } }
 
 function TI({ value, onChange, ph }: { value: string; onChange: (v: string) => void; ph?: string }) {
   return <input type="text" value={value} onChange={(e) => onChange(e.target.value)} {...stop} placeholder={ph} className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
@@ -34,20 +37,42 @@ function CS({ value, onChange }: { value: string; onChange: (v: string) => void 
 }
 
 function FU({ value, onChange, accept }: { value: string; onChange: (v: string) => void; accept: string }) {
+  const [error, setError] = useState<string | null>(null)
+
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+    setError(null)
+    if (file.size > MAX_FILE_SIZE) {
+      setError('El archivo excede 5MB')
+      return
+    }
     const reader = new FileReader()
     reader.onload = (ev) => { onChange(ev.target?.result as string) }
     reader.readAsDataURL(file)
   }
+
+  const isImage = accept.includes('image')
+
   return (
-    <div className="space-y-1">
-      <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-neutral-600 px-3 py-2 text-xs text-neutral-400 hover:border-indigo-500 hover:text-indigo-400" {...stop}>
+    <div className="space-y-1" onMouseDown={(e) => e.stopPropagation()}>
+      <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-neutral-600 px-3 py-2 text-xs text-neutral-400 hover:border-indigo-500 hover:text-indigo-400">
         <Upload size={14} /><span>Subir archivo</span>
         <input type="file" accept={accept} onChange={handleFile} className="hidden" />
       </label>
-      {value && <p className="truncate text-[10px] text-neutral-600">Archivo cargado</p>}
+      {error && <p className="flex items-center gap-1 text-[10px] text-red-400"><AlertCircle size={10} />{error}</p>}
+      {value && !error && (
+        <div className="flex items-center gap-2">
+          {isImage && value.startsWith('data:image') && (
+            <img src={value} alt="Preview" className="h-10 w-10 rounded object-cover border border-neutral-700" />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="truncate text-[10px] text-neutral-500">Archivo cargado</p>
+          </div>
+          <button onClick={(e) => { e.stopPropagation(); onChange('') }} className="rounded p-0.5 text-neutral-600 hover:text-red-400"><X size={10} /></button>
+        </div>
+      )}
     </div>
   )
 }

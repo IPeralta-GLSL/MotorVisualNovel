@@ -18,6 +18,7 @@ export default function LiteGraphProperties() {
   const node = useEditorStore((s) => s.liteGraphNode)
   const [menuOpen, setMenuOpen] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [, forceRender] = useState(0)
 
   if (!node) return (
     <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
@@ -32,14 +33,18 @@ export default function LiteGraphProperties() {
     const removeComp = (id: string) => { node.removeComponent(id) }
     const updateProps = (id: string, props: Record<string, unknown>) => {
       const comp = node.sceneComponents.find((c) => c.id === id)
-      if (comp) { Object.assign(comp.props, props); node.setDirtyCanvas(true, true) }
+      if (comp) {
+        comp.props = { ...comp.props, ...props }
+        node.setDirtyCanvas(true, true)
+        forceRender(n => n + 1)
+      }
     }
     return (
       <div className="space-y-4 p-4">
         <div className="flex items-center gap-2"><Film size={14} className="text-indigo-400" /><span className="text-sm font-bold text-neutral-200">Escena</span></div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Nombre</label>
-          <input type="text" value={node.sceneName} onChange={(e) => { node.sceneName = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()}
+          <input type="text" value={node.sceneName} onChange={(e) => { node.sceneName = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
         </div>
         <div className="border-t border-neutral-700 pt-3">
@@ -89,14 +94,14 @@ export default function LiteGraphProperties() {
         <div className="flex items-center gap-2"><Layers size={14} className="text-purple-400" /><span className="text-sm font-bold text-neutral-200">Transicion</span></div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Tipo</label>
-          <select value={node.transType} onChange={(e) => { node.transType = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()}
+          <select value={node.transType} onChange={(e) => { node.transType = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-purple-500">
             <option value="fade">Fade</option><option value="dissolve">Disolver</option><option value="slide">Deslizar</option><option value="cut">Corte</option>
           </select>
         </div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Duracion (ms)</label>
-          <input type="number" value={node.transDuration} onChange={(e) => { node.transDuration = Number(e.target.value); node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()} min={0}
+          <input type="number" value={node.transDuration} onChange={(e) => { node.transDuration = Number(e.target.value); node.setDirtyCanvas(true, true) }} onKeyDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onFocus={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} onMouseDown={(e) => { e.stopPropagation(); e.nativeEvent.stopImmediatePropagation?.() }} min={0}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-purple-500" />
         </div>
       </div>
