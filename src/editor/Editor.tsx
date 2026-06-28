@@ -7,8 +7,6 @@ import Sidebar from '@/editor/panels/Sidebar'
 import GamePreview from '@/editor/preview/GamePreview'
 import { Plus, Layers, PlayCircle, Trash2 } from 'lucide-react'
 import { useEditorStore } from '@/shared/store/editorStore'
-import type { LiteGraphNode } from '@/shared/types'
-
 export default function Editor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const graphRef = useRef<LGraph | null>(null)
@@ -43,7 +41,7 @@ export default function Editor() {
     }
 
     canvas.onNodeSelected = (node: import('litegraph.js').LGraphNode) => {
-      setLiteGraphNode(node as unknown as LiteGraphNode)
+      setLiteGraphNode(node)
     }
 
     canvas.onNodeDeselected = (node: import('litegraph.js').LGraphNode) => {

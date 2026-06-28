@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react'
 import type { NodeChange, EdgeChange, Connection } from '@xyflow/react'
-import type { SceneNode, SceneEdge, ProjectCharacter, ProjectVariable, ComponentType, SceneComponent, LiteGraphNode } from '@/shared/types'
+import type { SceneNode, SceneEdge, ProjectCharacter, ProjectVariable, ComponentType, SceneComponent } from '@/shared/types'
+import type { LGraphNode } from 'litegraph.js'
 import { COMPONENT_DEFAULTS } from '@/shared/types'
 
 interface EditorState {
@@ -11,8 +12,8 @@ interface EditorState {
   characters: ProjectCharacter[]
   variables: ProjectVariable[]
   projectName: string
-  liteGraphNode: LiteGraphNode
-  setLiteGraphNode: (node: LiteGraphNode) => void
+  liteGraphNode: LGraphNode | null
+  setLiteGraphNode: (node: LGraphNode | null) => void
 
   setNodes: (nodes: SceneNode[]) => void
   setEdges: (edges: SceneEdge[]) => void

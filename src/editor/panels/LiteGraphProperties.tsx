@@ -1,7 +1,7 @@
 import { useEditorStore } from '@/shared/store/editorStore'
 import { Film, Layers, Settings } from 'lucide-react'
-import type { SceneNodeLG } from '@/editor/litegraph/SceneNodeLG'
-import type { TransitionNodeLG } from '@/editor/litegraph/TransitionNodeLG'
+import { SceneNodeLG } from '@/editor/litegraph/SceneNodeLG'
+import { TransitionNodeLG } from '@/editor/litegraph/TransitionNodeLG'
 
 export default function LiteGraphProperties() {
   const node = useEditorStore((s) => s.liteGraphNode)
@@ -13,8 +13,8 @@ export default function LiteGraphProperties() {
     </div>
   )
 
-  if (node.type === 'Escena') {
-    const n = node as unknown as SceneNodeLG
+  if (node instanceof SceneNodeLG) {
+    const n = node
     return (
       <div className="space-y-4 p-4">
         <div className="flex items-center gap-2"><Film size={14} className="text-indigo-400" /><span className="text-sm font-bold text-neutral-200">Escena</span></div>
@@ -36,8 +36,8 @@ export default function LiteGraphProperties() {
     )
   }
 
-  if (node.type === 'Transicion') {
-    const n = node as unknown as TransitionNodeLG
+  if (node instanceof TransitionNodeLG) {
+    const n = node
     return (
       <div className="space-y-4 p-4">
         <div className="flex items-center gap-2"><Layers size={14} className="text-purple-400" /><span className="text-sm font-bold text-neutral-200">Transicion</span></div>
