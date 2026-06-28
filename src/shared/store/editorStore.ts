@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react'
 import type { NodeChange, EdgeChange, Connection } from '@xyflow/react'
-import type { SceneNode, SceneEdge, ProjectCharacter, ProjectVariable, ComponentType, SceneComponent } from '@/shared/types'
+import type { SceneNode, SceneEdge, ProjectCharacter, ProjectVariable, ComponentType, SceneComponent, LiteGraphNode } from '@/shared/types'
 import { COMPONENT_DEFAULTS } from '@/shared/types'
 
 interface EditorState {
@@ -11,6 +11,8 @@ interface EditorState {
   characters: ProjectCharacter[]
   variables: ProjectVariable[]
   projectName: string
+  liteGraphNode: LiteGraphNode
+  setLiteGraphNode: (node: LiteGraphNode) => void
 
   setNodes: (nodes: SceneNode[]) => void
   setEdges: (edges: SceneEdge[]) => void
@@ -47,6 +49,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   characters: [],
   variables: [],
   projectName: 'Mi Novela Visual',
+  liteGraphNode: null,
+  setLiteGraphNode: (node) => set({ liteGraphNode: node }),
 
   setNodes: (nodes) => set({ nodes }),
   setEdges: (edges) => set({ edges }),

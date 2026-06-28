@@ -28,6 +28,13 @@ export interface SceneData {
 export type SceneNode = Node<SceneData, 'scene'>
 export type SceneEdge = Edge
 
+export interface TransitionData {
+  transType: string
+  transDuration: number
+}
+
+export type LiteGraphNode = { type: string; sceneName?: string; sceneComponents?: SceneComponent[]; transType?: string; transDuration?: number; id: number; [key: string]: unknown } | null
+
 export interface ProjectCharacter {
   id: string
   name: string
