@@ -1,21 +1,23 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { SceneEngine, type EngineState } from '@/engine/SceneEngine'
+import { VNEngine, type VNState } from '@/engine/VNEngine'
 import { useEditorStore } from '@/shared/store/editorStore'
 import { X } from 'lucide-react'
 
 interface Props { onClose: () => void }
 
 export default function GamePreview({ onClose }: Props) {
-  const nodes = useEditorStore((s) => s.nodes)
-  const edges = useEditorStore((s) => s.edges)
-  const [engine] = useState(() => new SceneEngine(nodes, edges))
-  const [state, setState] = useState<EngineState>(engine.getState())
+  const liteGraph = useEditorStore((s) => s.liteGraph)
+  const [engine] = useState(() => liteGraph ? new VNEngine(liteGraph) : null)
+  const [state, setState] = useState<VNState>({ currentSceneId: null, variables: {}, visibleCharacters: [], background: '', dialogText: null, choiceOptions: null, waitingForInput: false, running: false })
   const [visibleText, setVisibleText] = useState('')
   const [typing, setTyping] = useState(false)
+  const [entering, setEntering] = useState(true)
   const typingRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    setTimeout(() => setEntering(false), 50)
+    if (!engine) return
     const unsub = engine.subscribe((s) => { setState(s); if (s.dialogText && s.dialogText.text !== state.dialogText?.text) startTyping(s.dialogText.text) })
     engine.start()
     return () => { unsub(); engine.stop(); if (timerRef.current) clearTimeout(timerRef.current) }
@@ -31,16 +33,16 @@ export default function GamePreview({ onClose }: Props) {
 
   const handleClick = useCallback(() => {
     if (typingRef.current) { typingRef.current = false; if (timerRef.current) clearTimeout(timerRef.current); setVisibleText(state.dialogText?.text || ''); setTyping(false) }
-    else engine.advance()
+    else if (engine) engine.advance()
   }, [engine, state.dialogText])
 
-  const handleChoice = useCallback((id: string) => { engine.selectChoice(id) }, [engine])
+  const handleChoice = useCallback((id: string) => { if (engine) engine.selectChoice(id) }, [engine])
 
   const posMap: Record<string, string> = { left: 'left-[15%]', center: 'left-1/2 -translate-x-1/2', right: 'right-[15%]' }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-      <div className="relative flex h-[600px] w-[960px] flex-col overflow-hidden rounded-xl border border-neutral-700 shadow-2xl">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/90 transition-all duration-300 ${entering ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+      <div className="relative flex h-[600px] w-[960px] flex-col overflow-hidden rounded-2xl border border-neutral-700 shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between bg-neutral-900/90 px-4 py-2">
           <span className="text-xs font-bold uppercase tracking-widest text-neutral-400">Vista Previa</span>
           <button onClick={onClose} className="rounded-lg p-1.5 text-neutral-400 hover:bg-neutral-800"><X size={14} /></button>
@@ -48,7 +50,7 @@ export default function GamePreview({ onClose }: Props) {
         <div className="relative flex-1 cursor-pointer select-none bg-neutral-950" onClick={handleClick}>
           <div className="absolute inset-0 bg-gradient-to-b from-neutral-900 to-neutral-950" />
           {state.visibleCharacters.map((ch) => (
-            <div key={ch.id} className={`absolute bottom-[140px] ${posMap[ch.position] || 'left-1/2 -translate-x-1/2'} flex flex-col items-center`}>
+            <div key={ch.id} className={`absolute bottom-[140px] ${posMap[ch.position] || 'left-1/2 -translate-x-1/2'} flex flex-col items-center transition-all duration-500`}>
               <div className="flex h-40 w-24 items-center justify-center rounded-xl border-2 border-neutral-600/50 bg-gradient-to-b from-neutral-700 to-neutral-800"><span className="text-xs text-neutral-400">{ch.expression}</span></div>
               <span className="mt-2 rounded-md bg-black/60 px-2 py-0.5 text-xs text-neutral-300">{ch.id}</span>
             </div>
@@ -68,7 +70,7 @@ export default function GamePreview({ onClose }: Props) {
                 <p className="mb-3 text-center text-xs font-bold uppercase tracking-widest text-neutral-400">Elegi una opcion</p>
                 {state.choiceOptions.map((op, i) => (
                   <button key={op.id} onClick={(e) => { e.stopPropagation(); handleChoice(op.id) }}
-                    className="flex w-full items-center gap-3 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-left hover:border-indigo-500 hover:bg-neutral-700">
+                    className="flex w-full items-center gap-3 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-left hover:border-indigo-500 hover:bg-neutral-700 transition-colors">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-600/30 text-xs font-bold text-indigo-300">{i + 1}</span>
                     <span className="text-sm text-neutral-200">{op.text}</span>
                   </button>
@@ -78,8 +80,8 @@ export default function GamePreview({ onClose }: Props) {
           )}
           {!state.running && !state.dialogText && !state.choiceOptions && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-              <p className="text-lg text-neutral-500">{state.currentNodeId ? 'Escena terminada' : 'Sin escenas'}</p>
-              <button onClick={(e) => { e.stopPropagation(); engine.stop(); engine.start() }} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-500">Reiniciar</button>
+              <p className="text-lg text-neutral-500">{state.currentSceneId ? 'Escena terminada' : 'Sin escenas en el grafo'}</p>
+              <button onClick={(e) => { e.stopPropagation(); if (engine) { engine.stop(); engine.start() } }} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-500">Reiniciar</button>
             </div>
           )}
         </div>

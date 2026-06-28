@@ -11,7 +11,7 @@ export default function Editor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const graphRef = useRef<LGraph | null>(null)
   const [preview, setPreview] = useState(false)
-  const { projectName, setLiteGraphNode } = useEditorStore()
+  const { projectName, setLiteGraphNode, setLiteGraph } = useEditorStore()
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -75,8 +75,9 @@ export default function Editor() {
 
     graph.start()
     graphRef.current = graph
-    return () => { ro.disconnect(); graph.stop() }
-  }, [setLiteGraphNode])
+    setLiteGraph(graph)
+    return () => { ro.disconnect(); graph.stop(); setLiteGraph(null) }
+  }, [setLiteGraphNode, setLiteGraph])
 
   const addNodeToGraph = (type: 'scene' | 'transition') => {
     if (!graphRef.current) return

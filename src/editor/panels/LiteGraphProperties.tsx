@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useEditorStore } from '@/shared/store/editorStore'
 import { Film, Layers, Settings, Plus, Trash2, ChevronRight, ImageIcon, MessageSquare, User, GitBranch, Music, HelpCircle, Variable, Clock } from 'lucide-react'
 import { SceneNodeLG } from '@/editor/litegraph/SceneNodeLG'
@@ -39,7 +39,7 @@ export default function LiteGraphProperties() {
         <div className="flex items-center gap-2"><Film size={14} className="text-indigo-400" /><span className="text-sm font-bold text-neutral-200">Escena</span></div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Nombre</label>
-          <input type="text" value={node.sceneName} onChange={(e) => { node.sceneName = e.target.value; node.setDirtyCanvas(true, true) }}
+          <input type="text" value={node.sceneName} onChange={(e) => { node.sceneName = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-indigo-500" />
         </div>
         <div className="border-t border-neutral-700 pt-3">
@@ -89,14 +89,14 @@ export default function LiteGraphProperties() {
         <div className="flex items-center gap-2"><Layers size={14} className="text-purple-400" /><span className="text-sm font-bold text-neutral-200">Transicion</span></div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Tipo</label>
-          <select value={node.transType} onChange={(e) => { node.transType = e.target.value; node.setDirtyCanvas(true, true) }}
+          <select value={node.transType} onChange={(e) => { node.transType = e.target.value; node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-purple-500">
             <option value="fade">Fade</option><option value="dissolve">Disolver</option><option value="slide">Deslizar</option><option value="cut">Corte</option>
           </select>
         </div>
         <div className="space-y-1">
           <label className="text-[11px] font-medium text-neutral-400">Duracion (ms)</label>
-          <input type="number" value={node.transDuration} onChange={(e) => { node.transDuration = Number(e.target.value); node.setDirtyCanvas(true, true) }} min={0}
+          <input type="number" value={node.transDuration} onChange={(e) => { node.transDuration = Number(e.target.value); node.setDirtyCanvas(true, true) }} onKeyDown={(e) => e.stopPropagation()} onFocus={(e) => e.stopPropagation()} min={0}
             className="w-full rounded-lg border border-neutral-600 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 outline-none focus:border-purple-500" />
         </div>
       </div>

@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react'
 import type { NodeChange, EdgeChange, Connection } from '@xyflow/react'
 import type { SceneNode, SceneEdge, ProjectCharacter, ProjectVariable, ComponentType, SceneComponent } from '@/shared/types'
-import type { LGraphNode } from 'litegraph.js'
+import type { LGraphNode, LGraph } from 'litegraph.js'
 import { COMPONENT_DEFAULTS } from '@/shared/types'
 
 interface EditorState {
@@ -14,6 +14,8 @@ interface EditorState {
   projectName: string
   liteGraphNode: LGraphNode | null
   setLiteGraphNode: (node: LGraphNode | null) => void
+  liteGraph: LGraph | null
+  setLiteGraph: (graph: LGraph | null) => void
 
   setNodes: (nodes: SceneNode[]) => void
   setEdges: (edges: SceneEdge[]) => void
@@ -52,6 +54,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   projectName: 'Mi Novela Visual',
   liteGraphNode: null,
   setLiteGraphNode: (node) => set({ liteGraphNode: node }),
+  liteGraph: null,
+  setLiteGraph: (graph) => set({ liteGraph: graph }),
 
   setNodes: (nodes) => set({ nodes }),
   setEdges: (edges) => set({ edges }),
